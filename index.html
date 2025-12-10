@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Ask Alfred Wainwright</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<style>
+.typewriter { overflow: hidden; white-space: pre-wrap; border-right: 2px solid #4ADE80; animation: blink 1s step-end infinite; }
+@keyframes blink { 50% { border-color: transparent; } }
+</style>
+</head>
+<body class="bg-green-50 min-h-screen flex flex-col items-center justify-center p-4">
+
+<h1 class="text-4xl font-bold mb-6 text-center">Ask Alfred Wainwright</h1>
+
+<input id="question" type="text" placeholder="Ask about a fell or walk..."
+       class="p-3 w-full max-w-lg rounded border border-gray-300 mb-4 shadow"/>
+<button id="askBtn" class="bg-green-700 text-white px-5 py-2 rounded hover:bg-green-800">
+  Ask Alfred
+</button>
+
+<div id="answerContainer" class="mt-6 w-full max-w-lg">
+  <div id="sketch" class="mb-4 flex justify-center">
+    <img id="fellSketch" src="sketches/default.png" alt="fell sketch" class="h-12 w-12"/>
+  </div>
+  <div id="answer" class="p-4 bg-white rounded shadow text-gray-800 min-h-[100px] typewriter"></div>
+</div>
+
+<script>
+const fellIcons = {
+  "scafell pike": "sketches/scafell-pike.png",
+  "helvellyn": "sketches/helvellyn.png",
+  "catbells": "sketches/catbells.png",
+  "striding edge": "sketches/striding-edge.png",
+  "default": "sketches/default.png"
+};
+
+const askBtn = document.getElementById('askBtn');
+const answerDiv = document.getElementById('answer');
+const fellSketch = document.getElementById('fellSketch');
+
+function typeWriter(text) {
+  answerDiv.textContent = '';
+  let i = 0;
+  function typing() {
+    if (i < text.length) {
+      answerDiv.textContent += text.charAt(i);
+      i++;
+      setTimeout(typing, 20);
+    }
+  }
+  typing();
+}
+
+askBtn.addEventListener('click', async () => {
+  const question = document.getElementById('question').value.trim();
+  if (!question) return;
+
+  answerDiv.textContent = "Alfred is thinking... 🖋️";
+
+  try {
+    const response = await fetch('https://<your-vercel-app>.vercel.app/api/ask', {
+      method: 'POST',
+      headers: {'Content-Type': 'application/json'},
+      body: JSON.stringify({ question })
+    });
+
+    const data = await response.json();
+
+    // Detect fell name
+    let fellName = "default";
+    Object.keys(fellIcons).forEach(key => {
+      if(question.toLowerCase().includes(key)) fellName = key;
+    });
+    fellSketch.src = fellIcons[fellName];
+
+    typeWriter(data.answer);
+  } catch (err) {
+    typeWriter("Alfred is too weary to respond right now.");
+  }
+});
+</script>
+</body>
+</html>
