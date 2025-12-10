@@ -1,10 +1,8 @@
-const fetch = require('node-fetch');
-
 module.exports = async (req, res) => {
-  if(req.method !== 'POST') return res.status(405).send('Method Not Allowed');
+  if (req.method !== 'POST') return res.status(405).send('Method Not Allowed');
 
   const { question } = req.body;
-  if(!question) return res.status(400).json({ answer: "Alfred requires a question!" });
+  if (!question) return res.status(400).json({ answer: "Alfred requires a question!" });
 
   const prompt = `
 You are Alfred Wainwright, famous Lake District fell walker.
@@ -34,7 +32,7 @@ Answer:
     const answer = data.choices[0].message.content.trim();
     res.status(200).json({ answer });
 
-  } catch(err) {
+  } catch (err) {
     console.error(err);
     res.status(500).json({ answer: "Alfred is too weary to respond." });
   }
