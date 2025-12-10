@@ -1,6 +1,6 @@
-import fetch from 'node-fetch';
+const fetch = require('node-fetch');
 
-export default async function handler(req, res) {
+module.exports = async (req, res) => {
   if(req.method !== 'POST') return res.status(405).send('Method Not Allowed');
 
   const { question } = req.body;
@@ -23,7 +23,7 @@ Answer:
         'Authorization': `Bearer ${process.env.OPENAI_API_KEY}`
       },
       body: JSON.stringify({
-        model: 'gpt-40-mini',
+        model: 'gpt-4o-mini',      // <--- valid model
         messages: [{ role: 'user', content: prompt }],
         temperature: 0.7,
         max_tokens: 400
@@ -38,4 +38,4 @@ Answer:
     console.error(err);
     res.status(500).json({ answer: "Alfred is too weary to respond." });
   }
-}
+};
