@@ -23,7 +23,7 @@ Answer:
         'Authorization': `Bearer ${process.env.OPENAI_API_KEY}`
       },
       body: JSON.stringify({
-        model: 'gpt-4o-mini',      // <--- valid model
+        model: 'gpt-4o-mini',        // valid model
         messages: [{ role: 'user', content: prompt }],
         temperature: 0.7,
         max_tokens: 400
@@ -35,7 +35,7 @@ Answer:
     res.status(200).json({ answer });
 
   } catch(err) {
-    console.error(err);
+    console.error(err);  // This will show the real error in Vercel logs
     res.status(500).json({ answer: "Alfred is too weary to respond." });
   }
 };
