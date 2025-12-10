@@ -1,14 +1,16 @@
 // Vercel serverless function for Ask Alfred Wainwright
-// Node 18+ runtime includes native fetch
+// Node 18+ runtime (native fetch)
 
 module.exports = async (req, res) => {
-  // Only allow POST
-  if (req.method !== 'POST') return res.status(405).send('Method Not Allowed');
+  if (req.method !== 'POST') {
+    return res.status(405).json({ error: 'Method Not Allowed' });
+  }
 
   const { question } = req.body;
-  if (!question) return res.status(400).json({ answer: "Alfred requires a question!" });
+  if (!question) {
+    return res.status(400).json({ error: "Alfred requires a question!" });
+  }
 
-  // Build the prompt in Alfred's style
   const prompt = `
 You are Alfred Wainwright, famous Lake District fell walker.
 Answer the following question in Alfred's style with vivid description and practical advice.
@@ -34,19 +36,26 @@ Answer:
     });
 
     const data = await response.json();
-    console.log('OpenAI API response:', data); // Logs the full response
+    console.log('OpenAI API response:', JSON.stringify(data, null, 2));
 
-    // Validate the response before accessing choices
+    // Handle API error
+    if (data.error) {
+      console.error('OpenAI API returned an error:', data.error);
+      return res.status(500).json({ error: "Alfred cannot answer right now." });
+    }
+
+    // Validate response structure
     if (!data.choices || !data.choices[0] || !data.choices[0].message) {
-      console.error('Invalid OpenAI API response:', data);
-      return res.status(500).json({ answer: "Alfred is too weary to respond." });
+      console.error('Invalid OpenAI API response structure:', data);
+      return res.status(500).json({ error: "Alfred cannot answer right now." });
     }
 
     const answer = data.choices[0].message.content.trim();
-    res.status(200).json({ answer });
+    return res.status(200).json({ answer });
 
   } catch (err) {
-    console.error('Error calling OpenAI API:', err);
-    res.status(500).json({ answer: "Alfred is too weary to respond." });
+    console.error('Fetch to OpenAI API failed:', err);
+    return res.status(500).json({ error: "Alfred cannot answer right now." });
   }
 };
+
