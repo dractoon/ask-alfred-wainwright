@@ -1,7 +1,14 @@
-// Vercel serverless function for Ask Alfred Wainwright
-// Node 18+ runtime (native fetch)
-
 module.exports = async (req, res) => {
+  // Allow requests from anywhere (or you can restrict to your domain)
+  res.setHeader('Access-Control-Allow-Origin', '*'); 
+  res.setHeader('Access-Control-Allow-Methods', 'POST, OPTIONS');
+  res.setHeader('Access-Control-Allow-Headers', 'Content-Type, Authorization');
+
+  // Handle preflight request
+  if (req.method === 'OPTIONS') {
+    return res.status(200).end();
+  }
+
   if (req.method !== 'POST') {
     return res.status(405).json({ error: 'Method Not Allowed' });
   }
@@ -28,7 +35,7 @@ Answer:
         'Authorization': `Bearer ${process.env.OPENAI_API_KEY}`
       },
       body: JSON.stringify({
-        model: 'gpt-4o-mini',          // valid model
+        model: 'gpt-4o-mini',
         messages: [{ role: 'user', content: prompt }],
         temperature: 0.7,
         max_tokens: 400
@@ -38,15 +45,8 @@ Answer:
     const data = await response.json();
     console.log('OpenAI API response:', JSON.stringify(data, null, 2));
 
-    // Handle API error
-    if (data.error) {
-      console.error('OpenAI API returned an error:', data.error);
-      return res.status(500).json({ error: "Alfred cannot answer right now." });
-    }
-
-    // Validate response structure
-    if (!data.choices || !data.choices[0] || !data.choices[0].message) {
-      console.error('Invalid OpenAI API response structure:', data);
+    if (data.error || !data.choices || !data.choices[0] || !data.choices[0].message) {
+      console.error('Invalid OpenAI API response:', data);
       return res.status(500).json({ error: "Alfred cannot answer right now." });
     }
 
