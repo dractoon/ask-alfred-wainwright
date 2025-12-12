@@ -7,26 +7,27 @@
   <script src="https://cdn.tailwindcss.com"></script>
   <style>
     body {
-      background: url('./img/bg.png') no-repeat center center;
+      background: url('./img/mountains.jpg') no-repeat center center;
       background-size: cover;
     }
 
     /* Answer box styling */
     #answer {
-      background: rgba(255, 255, 245, 0.85); /* soft paper tone */
-      backdrop-filter: blur(6px); /* glassy effect */
-      border: 2px solid #ccc; /* soft pencil border look */
+      background: rgba(255, 255, 245, 0.85);
+      backdrop-filter: blur(6px);
+      border: 2px solid #ccc;
       border-radius: 12px;
       padding: 1rem;
       min-height: 100px;
       color: #333;
-      font-family: 'Georgia', serif; /* Wainwright/handwritten feel */
+      font-family: 'Georgia', serif;
       box-shadow: 0 4px 12px rgba(0,0,0,0.1);
       opacity: 0;
       transform: translateY(10px);
       transition: opacity 0.6s ease, transform 0.6s ease;
       position: relative;
       overflow: hidden;
+      white-space: pre-wrap; /* preserves line breaks */
     }
 
     /* Typewriter effect */
@@ -43,7 +44,6 @@
 </head>
 <body class="min-h-screen flex flex-col items-center justify-center p-4">
 
-  <!-- Alfred Image with tighter spacing -->
   <img src="./img/alfred.png" 
        alt="Cartoon Alfred Wainwright"
        class="w-48 h-auto mb-2 drop-shadow-lg" />
@@ -63,34 +63,60 @@
 
   <script>
     const answerEl = document.getElementById('answer');
+    const askBtn = document.getElementById('askBtn');
+    const questionInput = document.getElementById('question');
 
     function displayAnswer(text) {
       answerEl.innerHTML = '';
       answerEl.style.opacity = '1';
       answerEl.style.transform = 'translateY(0)';
 
-      // Typewriter effect
       for (let i = 0; i < text.length; i++) {
         const char = text[i];
         const span = document.createElement('span');
-        span.textContent = char === ' ' ? '\u00A0' : char; // preserve spaces
+        span.textContent = char === ' ' ? '\u00A0' : char; 
         span.style.animation = `fadeInChar 0.03s forwards`;
         span.style.animationDelay = `${i * 0.03}s`;
         answerEl.appendChild(span);
       }
     }
 
-    document.getElementById('askBtn').addEventListener('click', () => {
-      let q = document.getElementById('question').value.trim();
-      if (!q) return;
+    async function askAlfred(question) {
+      answerEl.innerHTML = 'Alfred is thinking…';
+      answerEl.style.opacity = '1';
+      answerEl.style.transform = 'translateY(0)';
 
-      // Format input to separate words if necessary
-      q = q.replace(/([A-Z])/g, ' $1').replace(/_/g, ' ');
+      try {
+        const res = await fetch('/api/ask', { // <-- your ask.js endpoint
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ question })
+        });
 
-      // Example static answer
-      const answerText = `Ah, ${q} — a wonderful choice! Here's what you need to know about this fell...`;
+        const data = await res.json();
 
-      displayAnswer(answerText);
+        if (data.error) {
+          displayAnswer(`Oops! ${data.error}`);
+        } else {
+          displayAnswer(data.answer);
+        }
+      } catch (err) {
+        displayAnswer('Alfred cannot answer right now.');
+        console.error(err);
+      }
+    }
+
+    askBtn.addEventListener('click', () => {
+      const question = questionInput.value.trim();
+      if (!question) return;
+      askAlfred(question);
+    });
+
+    // Optional: press Enter to ask
+    questionInput.addEventListener('keydown', (e) => {
+      if (e.key === 'Enter') {
+        askBtn.click();
+      }
     });
   </script>
 
