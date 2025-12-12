@@ -3,133 +3,215 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Ask Alfred Wainwright</title>
+  <title>Wainwright Explorer</title>
   <script src="https://cdn.tailwindcss.com"></script>
-  <style>
-    body {
-      background: url('./img/bg.png') no-repeat center center;
-      background-size: cover;
-    }
-
-    /* Answer box styling */
-    #answer {
-      background: rgba(255, 255, 245, 0.85);
-      backdrop-filter: blur(6px);
-      border: 2px solid #ccc;
-      border-radius: 12px;
-      padding: 1rem;
-      min-height: 100px;
-      color: #333;
-      font-family: 'Georgia', serif;
-      box-shadow: 0 4px 12px rgba(0,0,0,0.1);
-      opacity: 0;
-      transform: translateY(10px);
-      transition: opacity 0.6s ease, transform 0.6s ease;
-      position: relative;
-      overflow: hidden;
-      white-space: pre-wrap; /* preserves line breaks */
-      word-break: normal;     /* prevents breaking words */
-      max-width: 700px;       /* keeps lines readable */
-    }
-
-    /* Typewriter effect for words */
-    #answer span {
-      display: inline-block; /* prevents words from splitting */
-      margin-right: 0.25rem; /* space between words */
-      opacity: 0;
-      animation: fadeInWord 0.03s forwards;
-    }
-
-    @keyframes fadeInWord {
-      to { opacity: 1; }
-    }
-  </style>
 </head>
-<body class="min-h-screen flex flex-col items-center justify-center p-4">
-
+<body class="bg-gray-100 flex flex-col items-center justify-start min-h-screen p-6">
   <img src="./img/alfred.png" 
        alt="Cartoon Alfred Wainwright"
        class="w-48 h-auto mb-2 drop-shadow-lg" />
 
-  <h1 class="text-4xl font-bold mb-4 text-center">Ask Alfred Wainwright</h1>
+  <!-- Modern H1 -->
+  <h1 class="text-4xl md:text-6xl font-extrabold text-gray-800 mb-6 text-center tracking-tight leading-tight drop-shadow-lg">
+    🌄 Wainwright Explorer
+  </h1>
 
-  <input id="question" type="text" placeholder="Ask about a fell or walk..."
-         class="p-3 w-full max-w-lg rounded border border-gray-300 mb-4 shadow"/>
+  <!-- Fell dropdown selector -->
+  <div class="w-full max-w-md mb-4">
+    <select id="fellSelect"
+      class="w-full p-3 rounded-lg border border-gray-300 shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500">
+      <option value="" disabled selected>Select a Fell</option>
 
-  <button id="askBtn" class="bg-green-700 text-white px-5 py-2 rounded hover:bg-green-800">
-    Ask Alfred
-  </button>
-
-  <div id="answerContainer" class="mt-6 w-full max-w-lg relative">
-    <div id="answer"></div>
+      <!-- Full list of 214 fells -->
+      <option value="Allen Crags">Allen Crags</option><option value="Angletarn Pikes">Angletarn Pikes</option>
+      <option value="Ard Crags">Ard Crags</option><option value="Armboth Fell">Armboth Fell</option>
+      <option value="Arnison Crag">Arnison Crag</option><option value="Arthur's Pike">Arthur's Pike</option>
+      <option value="Bakestall">Bakestall</option><option value="Bannerdale Crags">Bannerdale Crags</option>
+      <option value="Barf">Barf</option><option value="Barrow">Barrow</option>
+      <option value="Base Brown">Base Brown</option><option value="Beda Fell">Beda Fell</option>
+      <option value="Binsey">Binsey</option><option value="Birkhouse Moor">Birkhouse Moor</option>
+      <option value="Birks">Birks</option><option value="Black Fell">Black Fell</option>
+      <option value="Blake Fell">Blake Fell</option><option value="Blea Rigg">Blea Rigg</option>
+      <option value="Bleaberry Fell">Bleaberry Fell</option><option value="Blencathra">Blencathra</option>
+      <option value="Bonscale Pike">Bonscale Pike</option><option value="Bowfell">Bowfell</option>
+      <option value="Bowscale Fell">Bowscale Fell</option><option value="Brae Fell">Brae Fell</option>
+      <option value="Brandreth">Brandreth</option><option value="Branstree">Branstree</option>
+      <option value="Brim Fell">Brim Fell</option><option value="Brock Crags">Brock Crags</option>
+      <option value="Broom Fell">Broom Fell</option><option value="Buckbarrow">Buckbarrow</option>
+      <option value="Burnbank Fell">Burnbank Fell</option><option value="Calf Crag">Calf Crag</option>
+      <option value="Carl Side">Carl Side</option><option value="Carrock Fell">Carrock Fell</option>
+      <option value="Castle Crag">Castle Crag</option><option value="Cat Bells">Cat Bells</option>
+      <option value="Catstye Cam">Catstye Cam</option><option value="Caudale Moor">Caudale Moor</option>
+      <option value="Causey Pike">Causey Pike</option><option value="Caw Fell">Caw Fell</option>
+      <option value="Clough Head">Clough Head</option><option value="Cold Pike">Cold Pike</option>
+      <option value="Coniston Old Man">Coniston Old Man</option><option value="Crag Fell">Crag Fell</option>
+      <option value="Crag Hill">Crag Hill</option><option value="Crinkle Crags">Crinkle Crags</option>
+      <option value="Dale Head">Dale Head</option><option value="Dodd (Skiddaw)">Dodd (Skiddaw)</option>
+      <option value="Dollywaggon Pike">Dollywaggon Pike</option><option value="Dove Crag">Dove Crag</option>
+      <option value="Dow Crag">Dow Crag</option><option value="Eagle Crag">Eagle Crag</option>
+      <option value="Eel Crag">Eel Crag</option><option value="Esk Pike">Esk Pike</option>
+      <option value="Fairfield">Fairfield</option><option value="Fellbarrow">Fellbarrow</option>
+      <option value="Fleetwith Pike">Fleetwith Pike</option><option value="Froswick">Froswick</option>
+      <option value="Gavel Fell">Gavel Fell</option><option value="Gibson Knott">Gibson Knott</option>
+      <option value="Glaramara">Glaramara</option><option value="Glenridding Dodd">Glenridding Dodd</option>
+      <option value="Gowbarrow Fell">Gowbarrow Fell</option><option value="Grange Fell">Grange Fell</option>
+      <option value="Grasmoor">Grasmoor</option><option value="Gray Crag">Gray Crag</option>
+      <option value="Graystones">Graystones</option><option value="Great Borne">Great Borne</option>
+      <option value="Great Calva">Great Calva</option><option value="Great Carrs">Great Carrs</option>
+      <option value="Great Cockup">Great Cockup</option><option value="Great Crag">Great Crag</option>
+      <option value="Great Dodd">Great Dodd</option><option value="Great End">Great End</option>
+      <option value="Great Gable">Great Gable</option><option value="Great Mell Fell">Great Mell Fell</option>
+      <option value="Great Rigg">Great Rigg</option><option value="Great Sca Fell">Great Sca Fell</option>
+      <option value="Green Crag">Green Crag</option><option value="Green Gable">Green Gable</option>
+      <option value="Grey Crag">Grey Crag</option><option value="Grey Friar">Grey Friar</option>
+      <option value="Grey Knotts">Grey Knotts</option><option value="Grike">Grike</option>
+      <option value="Grisedale Pike">Grisedale Pike</option><option value="Hallin Fell">Hallin Fell</option>
+      <option value="Hard Knott">Hard Knott</option><option value="Harrison Stickle">Harrison Stickle</option>
+      <option value="Hart Crag">Hart Crag</option><option value="Hart Side">Hart Side</option>
+      <option value="Harter Fell (Far Eastern)">Harter Fell (Far Eastern)</option>
+      <option value="Harter Fell (Eskdale)">Harter Fell (Eskdale)</option>
+      <option value="Hartsop Above How">Hartsop Above How</option>
+      <option value="Hartsop Dodd">Hartsop Dodd</option>
+      <option value="Haycock">Haycock</option><option value="Haystacks">Haystacks</option>
+      <option value="Helm Crag">Helm Crag</option><option value="Helvellyn">Helvellyn</option>
+      <option value="Hen Comb">Hen Comb</option><option value="Heron Pike">Heron Pike</option>
+      <option value="High Crag">High Crag</option><option value="High Hartsop Dodd">High Hartsop Dodd</option>
+      <option value="High Pike (Eastern)">High Pike (Eastern)</option>
+      <option value="High Pike (Northern)">High Pike (Northern)</option>
+      <option value="High Raise (Central)">High Raise (Central)</option>
+      <option value="High Raise (Far Eastern)">High Raise (Far Eastern)</option>
+      <option value="High Rigg">High Rigg</option>
+      <option value="High Seat">High Seat</option><option value="High Spy">High Spy</option>
+      <option value="High Stile">High Stile</option><option value="High Street">High Street</option>
+      <option value="High Tove">High Tove</option><option value="Hindscarth">Hindscarth</option>
+      <option value="Holme Fell">Holme Fell</option><option value="Hopegill Head">Hopegill Head</option>
+      <option value="Ill Bell">Ill Bell</option><option value="Illgill Head">Illgill Head</option>
+      <option value="Kentmere Pike">Kentmere Pike</option><option value="Kidsty Pike">Kidsty Pike</option>
+      <option value="Kirk Fell">Kirk Fell</option><option value="Knott">Knott</option>
+      <option value="Knott Rigg">Knott Rigg</option><option value="Lank Rigg">Lank Rigg</option>
+      <option value="Latrigg">Latrigg</option><option value="Ling Fell">Ling Fell</option>
+      <option value="Lingmell">Lingmell</option><option value="Lingmoor Fell">Lingmoor Fell</option>
+      <option value="Little Hart Crag">Little Hart Crag</option><option value="Little Mell Fell">Little Mell Fell</option>
+      <option value="Loadpot Hill">Loadpot Hill</option><option value="Loft Crag">Loft Crag</option>
+      <option value="Long Side">Long Side</option><option value="Longlands Fell">Longlands Fell</option>
+      <option value="Lonscale Fell">Lonscale Fell</option><option value="Lord's Seat">Lord's Seat</option>
+      <option value="Loughrigg Fell">Loughrigg Fell</option><option value="Low Fell">Low Fell</option>
+      <option value="Low Pike">Low Pike</option><option value="Maiden Moor">Maiden Moor</option>
+      <option value="Mardale Ill Bell">Mardale Ill Bell</option><option value="Meal Fell">Meal Fell</option>
+      <option value="Mellbreak">Mellbreak</option><option value="Middle Dodd">Middle Dodd</option>
+      <option value="Middle Fell">Middle Fell</option><option value="Mungrisdale Common">Mungrisdale Common</option>
+      <option value="Nab Scar">Nab Scar</option><option value="Nethermost Pike">Nethermost Pike</option>
+      <option value="Outerside">Outerside</option><option value="Pavey Ark">Pavey Ark</option>
+      <option value="Pike of Blisco">Pike of Blisco</option><option value="Pike of Stickle">Pike of Stickle</option>
+      <option value="Pillar">Pillar</option><option value="Place Fell">Place Fell</option>
+      <option value="Raise">Raise</option><option value="Rampsgill Head">Rampsgill Head</option>
+      <option value="Rannerdale Knotts">Rannerdale Knotts</option><option value="Raven Crag">Raven Crag</option>
+      <option value="Red Pike (Buttermere)">Red Pike (Buttermere)</option>
+      <option value="Red Pike (Wasdale)">Red Pike (Wasdale)</option>
+      <option value="Red Screes">Red Screes</option>
+      <option value="Rest Dodd">Rest Dodd</option><option value="Robinson">Robinson</option>
+      <option value="Rossett Pike">Rossett Pike</option><option value="Rosthwaite Fell">Rosthwaite Fell</option>
+      <option value="Sail">Sail</option><option value="Sale Fell">Sale Fell</option><option value="Sallows">Sallows</option>
+      <option value="Scafell">Scafell</option><option value="Scafell Pike">Scafell Pike</option>
+      <option value="Scar Crags">Scar Crags</option><option value="Scoat Fell">Scoat Fell</option>
+      <option value="Seat Sandal">Seat Sandal</option><option value="Seatallan">Seatallan</option>
+      <option value="Seathwaite Fell">Seathwaite Fell</option><option value="Selside Pike">Selside Pike</option>
+      <option value="Sergeant Man">Sergeant Man</option><option value="Sergeant's Crag">Sergeant's Crag</option>
+      <option value="Sheffield Pike">Sheffield Pike</option><option value="Shipman Knotts">Shipman Knotts</option>
+      <option value="Silver How">Silver How</option><option value="Skiddaw">Skiddaw</option>
+      <option value="Skiddaw Little Man">Skiddaw Little Man</option><option value="Slight Side">Slight Side</option>
+      <option value="Sour Howes">Sour Howes</option><option value="Souther Fell">Souther Fell</option>
+      <option value="St Sunday Crag">St Sunday Crag</option><option value="Starling Dodd">Starling Dodd</option>
+      <option value="Steel Fell">Steel Fell</option><option value="Steel Knotts">Steel Knotts</option>
+      <option value="Steeple">Steeple</option><option value="Stone Arthur">Stone Arthur</option>
+      <option value="Stybarrow Dodd">Stybarrow Dodd</option><option value="Swirl How">Swirl How</option>
+      <option value="Tarn Crag (Central)">Tarn Crag (Central)</option>
+      <option value="Tarn Crag (Far Eastern)">Tarn Crag (Far Eastern)</option>
+      <option value="The Knott">The Knott</option><option value="The Nab">The Nab</option>
+      <option value="Thornthwaite Crag">Thornthwaite Crag</option><option value="Thunacar Knott">Thunacar Knott</option>
+      <option value="Troutbeck Tongue">Troutbeck Tongue</option><option value="Ullock Pike">Ullock Pike</option>
+      <option value="Ullscarf">Ullscarf</option><option value="Walla Crag">Walla Crag</option>
+      <option value="Wandope">Wandope</option><option value="Wansfell">Wansfell</option>
+      <option value="Watson's Dodd">Watson's Dodd</option><option value="Wether Hill">Wether Hill</option>
+      <option value="Wetherlam">Wetherlam</option><option value="Whin Rigg">Whin Rigg</option>
+      <option value="Whinlatter">Whinlatter</option><option value="White Side">White Side</option>
+      <option value="Whiteless Pike">Whiteless Pike</option><option value="Whiteside">Whiteside</option>
+      <option value="Yewbarrow">Yewbarrow</option><option value="Yoke">Yoke</option>
+    </select>
   </div>
 
-<script>
-  const answerEl = document.getElementById('answer');
-  const askBtn = document.getElementById('askBtn');
-  const questionInput = document.getElementById('question');
+  <!-- Content area -->
+  <div class="flex mt-4 gap-6 w-full max-w-4xl">
 
-  function displayAnswer(text) {
-    answerEl.innerHTML = '';
-    answerEl.style.opacity = '1';
-    answerEl.style.transform = 'translateY(0)';
+    <!-- Alfred’s description -->
+    <div class="w-3/4 p-6 bg-white rounded-xl shadow-lg">
+      <p id="responseText" class="text-gray-700">
+        Select a fell above to see Alfred’s description and details.
+      </p>
+    </div>
 
-    // Split text into paragraphs
-    const paragraphs = text.split('\n\n');
-    let totalDelay = 0;
+    <!-- Quick info -->
+    <div class="w-1/4 p-4 bg-white rounded-xl shadow-lg flex flex-col gap-4">
+      <img id="fellImage" src="/assets/fells/placeholder.jpg" alt="Fell thumbnail" class="rounded-lg w-full h-auto object-cover mb-2">
+      <div class="flex items-center gap-2 text-gray-700"><span>📍</span><span id="coords">Lat: –</span></div>
+      <div class="flex items-center gap-2 text-gray-700"><span>⛰️</span><span id="height">Height: –</span></div>
+      <div class="flex items-center gap-2 text-gray-700"><span>🗺️</span><span id="osRef">OS Grid: –</span></div>
+      <div class="flex items-center gap-2 text-gray-700"><span>📌</span><span id="region">Region: –</span></div>
+      <div class="flex items-center gap-2 text-gray-700"><span>🥾</span><span id="difficulty">Difficulty: –</span></div>
+      <a id="mapLink" href="#" target="_blank" class="mt-2 inline-block text-blue-600 hover:underline">View on Map</a>
+    </div>
 
-    paragraphs.forEach((para, pIdx) => {
-      const p = document.createElement('p');
-      p.style.marginBottom = '0.75rem';
+  </div>
 
-      // Split paragraph into words
-      const words = para.split(' ');
-      words.forEach(word => {
-        const span = document.createElement('span');
-        span.textContent = word;
-        span.style.animationDelay = `${totalDelay}s`;
-        p.appendChild(span);
-        totalDelay += 0.03; // increment delay per word
-      });
+  <script>
+    const apiURL = "https://ask-alfred-wainwright.vercel.app/ask/api";
 
-      answerEl.appendChild(p);
-      totalDelay += 0.3; // slight pause between paragraphs
-    });
-  }
+    document.getElementById("fellSelect").addEventListener("change", async (event) => {
+      const fell = event.target.value;
+      if (!fell) return;
 
-  async function askAlfred(question) {
-    displayAnswer('Alfred is thinking…');
+      // Reset info
+      document.getElementById("responseText").textContent = "Fetching Alfred’s words...";
+      document.getElementById("fellImage").src = `/assets/fells/placeholder.jpg`;
+      document.getElementById("coords").textContent = "Lat: –";
+      document.getElementById("height").textContent = "Height: –";
+      document.getElementById("osRef").textContent = "OS Grid: –";
+      document.getElementById("region").textContent = "Region: –";
+      document.getElementById("difficulty").textContent = "Difficulty: –";
+      document.getElementById("mapLink").href = "#";
 
-    try {
-      const res = await fetch('https://ask-alfred-wainwright.vercel.app/api/ask', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ question })
-      });
+      // Local image path
+      const imgPath = `/assets/fells/${fell.toLowerCase().replace(/ /g, "_")}.jpg`;
+      fetch(imgPath)
+        .then(() => document.getElementById("fellImage").src = imgPath)
+        .catch(() => document.getElementById("fellImage").src = `/assets/fells/placeholder.png`);
 
-      const data = await res.json();
+      // Fetch API
+      try {
+        const res = await fetch(apiURL, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            prompt: `Describe ${fell} in the style of Alfred Wainwright, and include its coordinates, height, OS grid reference, region, difficulty.`
+          })
+        });
 
-      if (data.error) {
-        displayAnswer(`Oops! ${data.error}`);
-      } else {
-        displayAnswer(data.answer);
+        const data = await res.json();
+
+        document.getElementById("responseText").innerHTML = data.description;
+        document.getElementById("coords").textContent = `Lat: ${data.info.lat}, Lon: ${data.info.lon}`;
+        document.getElementById("height").textContent = `Height: ${data.info.height}m`;
+        document.getElementById("osRef").textContent = `OS Grid: ${data.info.osRef}`;
+        document.getElementById("region").textContent = `Region: ${data.info.region}`;
+        document.getElementById("difficulty").textContent = `Difficulty: ${data.info.difficulty}`;
+        document.getElementById("mapLink").href = `https://www.google.com/maps/search/?api=1&query=${data.info.lat},${data.info.lon}`;
+
+      } catch (err) {
+        console.error(err);
+        document.getElementById("responseText").textContent = "Error fetching Alfred’s response.";
       }
-    } catch (err) {
-      displayAnswer('Alfred cannot answer right now.');
-      console.error(err);
-    }
-  }
-
-  askBtn.addEventListener('click', () => {
-    const question = questionInput.value.trim();
-    if (!question) return;
-    askAlfred(question);
-  });
-
-  questionInput.addEventListener('keydown', (e) => {
-    if (e.key === 'Enter') askBtn.click();
-  });
-</script>
+    });
+  </script>
 
 </body>
 </html>
