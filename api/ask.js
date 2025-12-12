@@ -1,17 +1,21 @@
 // api/ask.js
 module.exports = async (req, res) => {
-  res.setHeader('Access-Control-Allow-Origin', '*');
+  // 1️⃣ Set CORS headers for all responses
+  res.setHeader('Access-Control-Allow-Origin', '*'); // Allow all origins; replace '*' with your GitHub Pages URL for stricter security
   res.setHeader('Access-Control-Allow-Methods', 'POST, OPTIONS');
   res.setHeader('Access-Control-Allow-Headers', 'Content-Type, Authorization');
 
+  // 2️⃣ Handle preflight requests
   if (req.method === 'OPTIONS') {
-    return res.status(200).end();
+    return res.status(200).end(); // Respond OK for preflight
   }
 
+  // 3️⃣ Only allow POST requests
   if (req.method !== 'POST') {
     return res.status(405).json({ error: 'Method Not Allowed' });
   }
 
+  // 4️⃣ Extract question
   const { question } = req.body;
   if (!question) {
     return res.status(400).json({ error: "Alfred requires a question!" });
