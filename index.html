@@ -61,64 +61,60 @@
     <div id="answer" class="typewriter"></div>
   </div>
 
-  <script>
-    const answerEl = document.getElementById('answer');
-    const askBtn = document.getElementById('askBtn');
-    const questionInput = document.getElementById('question');
+<script>
+  const answerEl = document.getElementById('answer');
+  const askBtn = document.getElementById('askBtn');
+  const questionInput = document.getElementById('question');
 
-    function displayAnswer(text) {
-      answerEl.innerHTML = '';
-      answerEl.style.opacity = '1';
-      answerEl.style.transform = 'translateY(0)';
+  function displayAnswer(text) {
+    answerEl.innerHTML = '';
+    answerEl.style.opacity = '1';
+    answerEl.style.transform = 'translateY(0)';
 
-      for (let i = 0; i < text.length; i++) {
-        const char = text[i];
-        const span = document.createElement('span');
-        span.textContent = char === ' ' ? '\u00A0' : char; 
-        span.style.animation = `fadeInChar 0.03s forwards`;
-        span.style.animationDelay = `${i * 0.03}s`;
-        answerEl.appendChild(span);
-      }
+    for (let i = 0; i < text.length; i++) {
+      const char = text[i];
+      const span = document.createElement('span');
+      span.textContent = char === ' ' ? '\u00A0' : char;
+      span.style.animation = `fadeInChar 0.03s forwards`;
+      span.style.animationDelay = `${i * 0.03}s`;
+      answerEl.appendChild(span);
     }
+  }
 
-    async function askAlfred(question) {
-      answerEl.innerHTML = 'Alfred is thinking…';
-      answerEl.style.opacity = '1';
-      answerEl.style.transform = 'translateY(0)';
+  async function askAlfred(question) {
+    displayAnswer('Alfred is thinking…');
 
-      try {
-        const res = await fetch('/api/ask', { // <-- your ask.js endpoint
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ question })
-        });
+    try {
+      const res = await fetch('/api/ask', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ question })
+      });
 
-        const data = await res.json();
+      const data = await res.json();
 
-        if (data.error) {
-          displayAnswer(`Oops! ${data.error}`);
-        } else {
-          displayAnswer(data.answer);
-        }
-      } catch (err) {
-        displayAnswer('Alfred cannot answer right now.');
-        console.error(err);
+      if (data.error) {
+        displayAnswer(`Oops! ${data.error}`);
+      } else {
+        displayAnswer(data.answer);
       }
+    } catch (err) {
+      displayAnswer('Alfred cannot answer right now.');
+      console.error(err);
     }
+  }
 
-    askBtn.addEventListener('click', () => {
-      const question = questionInput.value.trim();
-      if (!question) return;
-      askAlfred(question);
-    });
+  askBtn.addEventListener('click', () => {
+    const question = questionInput.value.trim();
+    if (!question) return;
+    askAlfred(question);
+  });
 
-    // Optional: press Enter to ask
-    questionInput.addEventListener('keydown', (e) => {
-      if (e.key === 'Enter') {
-        askBtn.click();
-      }
-    });
-  </script>
+  questionInput.addEventListener('keydown', (e) => {
+    if (e.key === 'Enter') askBtn.click();
+  });
+</script>
+
 
 </body>
 </html>

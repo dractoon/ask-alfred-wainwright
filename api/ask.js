@@ -1,10 +1,9 @@
+// api/ask.js
 module.exports = async (req, res) => {
-  // Allow requests from anywhere (or you can restrict to your domain)
-  res.setHeader('Access-Control-Allow-Origin', '*'); 
+  res.setHeader('Access-Control-Allow-Origin', '*');
   res.setHeader('Access-Control-Allow-Methods', 'POST, OPTIONS');
   res.setHeader('Access-Control-Allow-Headers', 'Content-Type, Authorization');
 
-  // Handle preflight request
   if (req.method === 'OPTIONS') {
     return res.status(200).end();
   }
@@ -43,10 +42,8 @@ Answer:
     });
 
     const data = await response.json();
-    console.log('OpenAI API response:', JSON.stringify(data, null, 2));
 
-    if (data.error || !data.choices || !data.choices[0] || !data.choices[0].message) {
-      console.error('Invalid OpenAI API response:', data);
+    if (!data.choices || !data.choices[0] || !data.choices[0].message) {
       return res.status(500).json({ error: "Alfred cannot answer right now." });
     }
 
@@ -54,8 +51,7 @@ Answer:
     return res.status(200).json({ answer });
 
   } catch (err) {
-    console.error('Fetch to OpenAI API failed:', err);
+    console.error('OpenAI fetch error:', err);
     return res.status(500).json({ error: "Alfred cannot answer right now." });
   }
 };
-
