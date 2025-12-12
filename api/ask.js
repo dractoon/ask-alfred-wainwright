@@ -1,13 +1,13 @@
 // api/ask.js
-module.exports = async (req, res) => {
+export default async function handler(req, res) {
   // 1️⃣ Set CORS headers for all responses
-  res.setHeader('Access-Control-Allow-Origin', '*'); // Allow all origins; replace '*' with your GitHub Pages URL for stricter security
+  res.setHeader('Access-Control-Allow-Origin', '*'); // or your GitHub Pages URL
   res.setHeader('Access-Control-Allow-Methods', 'POST, OPTIONS');
   res.setHeader('Access-Control-Allow-Headers', 'Content-Type, Authorization');
 
-  // 2️⃣ Handle preflight requests
+  // 2️⃣ Handle preflight OPTIONS request immediately
   if (req.method === 'OPTIONS') {
-    return res.status(200).end(); // Respond OK for preflight
+    return res.status(200).end();
   }
 
   // 3️⃣ Only allow POST requests
@@ -15,7 +15,7 @@ module.exports = async (req, res) => {
     return res.status(405).json({ error: 'Method Not Allowed' });
   }
 
-  // 4️⃣ Extract question
+  // 4️⃣ Extract question from request
   const { question } = req.body;
   if (!question) {
     return res.status(400).json({ error: "Alfred requires a question!" });
@@ -58,4 +58,4 @@ Answer:
     console.error('OpenAI fetch error:', err);
     return res.status(500).json({ error: "Alfred cannot answer right now." });
   }
-};
+}
