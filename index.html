@@ -7,7 +7,7 @@
   <script src="https://cdn.tailwindcss.com"></script>
   <style>
     body {
-      background: url('./img/mountains.jpg') no-repeat center center;
+      background: url('./img/bg.png') no-repeat center center;
       background-size: cover;
     }
 
@@ -85,7 +85,7 @@
     displayAnswer('Alfred is thinking…');
 
     try {
-      const res = await fetch('/api/ask', {
+      const res = await fetch('https://ask-alfred-wainwright.vercel.app/api/ask', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ question })
