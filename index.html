@@ -14,7 +14,7 @@
     /* Answer box styling */
     #answer {
       background: rgba(255, 255, 245, 0.85); /* soft paper tone */
-      backdrop-filter: blur(6px); /* glassmorphism */
+      backdrop-filter: blur(6px); /* glassy effect */
       border: 2px solid #ccc; /* soft pencil border look */
       border-radius: 12px;
       padding: 1rem;
@@ -29,7 +29,7 @@
       overflow: hidden;
     }
 
-    /* Typewriter effect for characters */
+    /* Typewriter effect */
     .typewriter span {
       opacity: 0;
       display: inline-block;
@@ -39,31 +39,16 @@
     @keyframes fadeInChar {
       to { opacity: 1; }
     }
-
-    /* Pencil animation */
-    #pencil {
-      position: absolute;
-      top: 10px;
-      right: 10px;
-      font-size: 1.2rem;
-      animation: bounce 0.8s infinite alternate;
-      display: none; /* hidden until typing */
-    }
-
-    @keyframes bounce {
-      from { transform: translateY(0); }
-      to { transform: translateY(-4px); }
-    }
   </style>
 </head>
 <body class="min-h-screen flex flex-col items-center justify-center p-4">
 
-  <!-- Alfred Image -->
+  <!-- Alfred Image with tighter spacing -->
   <img src="./img/alfred.png" 
        alt="Cartoon Alfred Wainwright"
-       class="w-48 h-auto mb-4 drop-shadow-lg" />
+       class="w-48 h-auto mb-2 drop-shadow-lg" />
 
-  <h1 class="text-4xl font-bold mb-6 text-center">Ask Alfred Wainwright</h1>
+  <h1 class="text-4xl font-bold mb-4 text-center">Ask Alfred Wainwright</h1>
 
   <input id="question" type="text" placeholder="Ask about a fell or walk..."
          class="p-3 w-full max-w-lg rounded border border-gray-300 mb-4 shadow"/>
@@ -74,43 +59,38 @@
 
   <div id="answerContainer" class="mt-6 w-full max-w-lg relative">
     <div id="answer" class="typewriter"></div>
-    <div id="pencil">✏️ Alfred is sketching your answer…</div>
   </div>
 
   <script>
     const answerEl = document.getElementById('answer');
-    const pencilEl = document.getElementById('pencil');
 
     function displayAnswer(text) {
-      // Clear previous
       answerEl.innerHTML = '';
       answerEl.style.opacity = '1';
       answerEl.style.transform = 'translateY(0)';
 
-      // Show pencil
-      pencilEl.style.display = 'block';
-
       // Typewriter effect
-      text.split('').forEach((char, i) => {
+      for (let i = 0; i < text.length; i++) {
+        const char = text[i];
         const span = document.createElement('span');
-        span.textContent = char;
+        span.textContent = char === ' ' ? '\u00A0' : char; // preserve spaces
+        span.style.animation = `fadeInChar 0.03s forwards`;
         span.style.animationDelay = `${i * 0.03}s`;
         answerEl.appendChild(span);
-      });
-
-      // Hide pencil after typing is done
-      const totalTime = text.length * 30;
-      setTimeout(() => {
-        pencilEl.style.display = 'none';
-      }, totalTime + 500);
+      }
     }
 
     document.getElementById('askBtn').addEventListener('click', () => {
-      const q = document.getElementById('question').value.trim();
-      if(!q) return;
+      let q = document.getElementById('question').value.trim();
+      if (!q) return;
 
-      // Example answer (replace with real logic or API later)
-      displayAnswer(`Ah, ${q} — a wonderful choice! Here's what you need to know about this fell...`);
+      // Format input to separate words if necessary
+      q = q.replace(/([A-Z])/g, ' $1').replace(/_/g, ' ');
+
+      // Example static answer
+      const answerText = `Ah, ${q} — a wonderful choice! Here's what you need to know about this fell...`;
+
+      displayAnswer(answerText);
     });
   </script>
 
