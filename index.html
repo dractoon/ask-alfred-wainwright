@@ -18,7 +18,7 @@
     <select id="fellSelect"
       class="w-full p-3 rounded-lg border border-gray-300 shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500">
       <option value="" disabled selected>Select a Fell</option>
-      <!-- Add all 214 fells here -->
+      <!-- Example fells (replace with all 214) -->
       <option value="Allen Crags">Allen Crags</option>
       <option value="Blencathra">Blencathra</option>
       <option value="Cat Bells">Cat Bells</option>
@@ -79,19 +79,20 @@
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({
-            prompt: `Describe ${fell} in the style of Alfred Wainwright, and include its coordinates, height, OS grid reference, region, difficulty.`
+            question: `Describe ${fell} in the style of Alfred Wainwright, and include its coordinates, height, OS grid reference, region, difficulty.`
           })
         });
 
         const data = await res.json();
 
-        document.getElementById("responseText").innerHTML = data.description;
-        document.getElementById("coords").textContent = `Lat: ${data.info.lat}, Lon: ${data.info.lon}`;
-        document.getElementById("height").textContent = `Height: ${data.info.height}m`;
-        document.getElementById("osRef").textContent = `OS Grid: ${data.info.osRef}`;
-        document.getElementById("region").textContent = `Region: ${data.info.region}`;
-        document.getElementById("difficulty").textContent = `Difficulty: ${data.info.difficulty}`;
-        document.getElementById("mapLink").href = `https://www.google.com/maps/search/?api=1&query=${data.info.lat},${data.info.lon}`;
+        document.getElementById("responseText").innerHTML = data.answer;
+        // Example: if your API also returns info, replace the below lines with real data
+        document.getElementById("coords").textContent = `Lat: – , Lon: –`;
+        document.getElementById("height").textContent = `Height: –`;
+        document.getElementById("osRef").textContent = `OS Grid: –`;
+        document.getElementById("region").textContent = `Region: –`;
+        document.getElementById("difficulty").textContent = `Difficulty: –`;
+        document.getElementById("mapLink").href = "#";
 
       } catch (err) {
         console.error(err);
