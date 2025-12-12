@@ -1,85 +1,118 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Ask Alfred Wainwright</title>
-<script src="https://cdn.tailwindcss.com"></script>
-<style>
-.typewriter { overflow: hidden; white-space: pre-wrap; border-right: 2px solid #4ADE80; animation: blink 1s step-end infinite; }
-@keyframes blink { 50% { border-color: transparent; } }
-</style>
-</head>
-<body class="bg-green-50 min-h-screen flex flex-col items-center justify-center p-4">
-
-<h1 class="text-4xl font-bold mb-6 text-center">Ask Alfred Wainwright</h1>
-
-<input id="question" type="text" placeholder="Ask about a fell or walk..."
-       class="p-3 w-full max-w-lg rounded border border-gray-300 mb-4 shadow"/>
-<button id="askBtn" class="bg-green-700 text-white px-5 py-2 rounded hover:bg-green-800">
-  Ask Alfred
-</button>
-
-<div id="answerContainer" class="mt-6 w-full max-w-lg">
-  <div id="sketch" class="mb-4 flex justify-center">
-    <img id="fellSketch" src="sketches/default.png" alt="fell sketch" class="h-12 w-12"/>
-  </div>
-  <div id="answer" class="p-4 bg-white rounded shadow text-gray-800 min-h-[100px] typewriter"></div>
-</div>
-
-<script>
-const fellIcons = {
-  "scafell pike": "sketches/scafell-pike.png",
-  "helvellyn": "sketches/helvellyn.png",
-  "catbells": "sketches/catbells.png",
-  "striding edge": "sketches/striding-edge.png",
-  "default": "sketches/default.png"
-};
-
-const askBtn = document.getElementById('askBtn');
-const answerDiv = document.getElementById('answer');
-const fellSketch = document.getElementById('fellSketch');
-
-function typeWriter(text) {
-  answerDiv.textContent = '';
-  let i = 0;
-  function typing() {
-    if (i < text.length) {
-      answerDiv.textContent += text.charAt(i);
-      i++;
-      setTimeout(typing, 20);
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Ask Alfred Wainwright</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    body {
+      background: url('./img/bg.png') no-repeat center center;
+      background-size: cover;
     }
-  }
-  typing();
-}
 
-askBtn.addEventListener('click', async () => {
-  const question = document.getElementById('question').value.trim();
-  if (!question) return;
+    /* Answer box styling */
+    #answer {
+      background: rgba(255, 255, 245, 0.85); /* soft paper tone */
+      backdrop-filter: blur(6px); /* glassmorphism */
+      border: 2px solid #ccc; /* soft pencil border look */
+      border-radius: 12px;
+      padding: 1rem;
+      min-height: 100px;
+      color: #333;
+      font-family: 'Georgia', serif; /* Wainwright/handwritten feel */
+      box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+      opacity: 0;
+      transform: translateY(10px);
+      transition: opacity 0.6s ease, transform 0.6s ease;
+      position: relative;
+      overflow: hidden;
+    }
 
-  answerDiv.textContent = "Alfred is thinking... 🖋️";
+    /* Typewriter effect for characters */
+    .typewriter span {
+      opacity: 0;
+      display: inline-block;
+      animation: fadeInChar 0.03s forwards;
+    }
 
-  try {
-    const response = await fetch('https://ask-alfred-wainwright.vercel.app/api/ask', {
-      method: 'POST',
-      headers: {'Content-Type': 'application/json'},
-      body: JSON.stringify({ question })
+    @keyframes fadeInChar {
+      to { opacity: 1; }
+    }
+
+    /* Pencil animation */
+    #pencil {
+      position: absolute;
+      top: 10px;
+      right: 10px;
+      font-size: 1.2rem;
+      animation: bounce 0.8s infinite alternate;
+      display: none; /* hidden until typing */
+    }
+
+    @keyframes bounce {
+      from { transform: translateY(0); }
+      to { transform: translateY(-4px); }
+    }
+  </style>
+</head>
+<body class="min-h-screen flex flex-col items-center justify-center p-4">
+
+  <!-- Alfred Image -->
+  <img src="./img/alfred.png" 
+       alt="Cartoon Alfred Wainwright"
+       class="w-48 h-auto mb-4 drop-shadow-lg" />
+
+  <h1 class="text-4xl font-bold mb-6 text-center">Ask Alfred Wainwright</h1>
+
+  <input id="question" type="text" placeholder="Ask about a fell or walk..."
+         class="p-3 w-full max-w-lg rounded border border-gray-300 mb-4 shadow"/>
+
+  <button id="askBtn" class="bg-green-700 text-white px-5 py-2 rounded hover:bg-green-800">
+    Ask Alfred
+  </button>
+
+  <div id="answerContainer" class="mt-6 w-full max-w-lg relative">
+    <div id="answer" class="typewriter"></div>
+    <div id="pencil">✏️ Alfred is sketching your answer…</div>
+  </div>
+
+  <script>
+    const answerEl = document.getElementById('answer');
+    const pencilEl = document.getElementById('pencil');
+
+    function displayAnswer(text) {
+      // Clear previous
+      answerEl.innerHTML = '';
+      answerEl.style.opacity = '1';
+      answerEl.style.transform = 'translateY(0)';
+
+      // Show pencil
+      pencilEl.style.display = 'block';
+
+      // Typewriter effect
+      text.split('').forEach((char, i) => {
+        const span = document.createElement('span');
+        span.textContent = char;
+        span.style.animationDelay = `${i * 0.03}s`;
+        answerEl.appendChild(span);
+      });
+
+      // Hide pencil after typing is done
+      const totalTime = text.length * 30;
+      setTimeout(() => {
+        pencilEl.style.display = 'none';
+      }, totalTime + 500);
+    }
+
+    document.getElementById('askBtn').addEventListener('click', () => {
+      const q = document.getElementById('question').value.trim();
+      if(!q) return;
+
+      // Example answer (replace with real logic or API later)
+      displayAnswer(`Ah, ${q} — a wonderful choice! Here's what you need to know about this fell...`);
     });
+  </script>
 
-    const data = await response.json();
-
-    // Detect fell name
-    let fellName = "default";
-    Object.keys(fellIcons).forEach(key => {
-      if(question.toLowerCase().includes(key)) fellName = key;
-    });
-    fellSketch.src = fellIcons[fellName];
-
-    typeWriter(data.answer);
-  } catch (err) {
-    typeWriter("Alfred is too weary to respond right now.");
-  }
-});
-</script>
 </body>
 </html>
