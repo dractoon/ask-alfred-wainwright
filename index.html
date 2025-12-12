@@ -28,21 +28,19 @@
       position: relative;
       overflow: hidden;
       white-space: pre-wrap; /* preserves line breaks */
-      overflow-wrap: normal;  /* prevents breaking words */
       word-break: normal;     /* prevents breaking words */
-      max-width: 700px;       /* optional: keeps lines readable on wide screens */
+      max-width: 700px;       /* keeps lines readable */
     }
 
-    /* Typewriter effect */
-    .typewriter span {
+    /* Typewriter effect for words */
+    #answer span {
+      display: inline-block; /* prevents words from splitting */
+      margin-right: 0.25rem; /* space between words */
       opacity: 0;
-      display: inline-block;  /* prevents splitting words */
-      white-space: pre;       /* preserves spaces */
-      word-break: normal;     /* prevents breaking words */
-      animation: fadeInChar 0.03s forwards;
+      animation: fadeInWord 0.03s forwards;
     }
 
-    @keyframes fadeInChar {
+    @keyframes fadeInWord {
       to { opacity: 1; }
     }
   </style>
@@ -63,7 +61,7 @@
   </button>
 
   <div id="answerContainer" class="mt-6 w-full max-w-lg relative">
-    <div id="answer" class="typewriter"></div>
+    <div id="answer"></div>
   </div>
 
 <script>
@@ -76,13 +74,27 @@
     answerEl.style.opacity = '1';
     answerEl.style.transform = 'translateY(0)';
 
-    for (let i = 0; i < text.length; i++) {
-      const char = text[i];
-      const span = document.createElement('span');
-      span.textContent = char === ' ' ? '\u00A0' : char;
-      span.style.animationDelay = `${i * 0.03}s`;
-      answerEl.appendChild(span);
-    }
+    // Split text into paragraphs
+    const paragraphs = text.split('\n\n');
+    let totalDelay = 0;
+
+    paragraphs.forEach((para, pIdx) => {
+      const p = document.createElement('p');
+      p.style.marginBottom = '0.75rem';
+
+      // Split paragraph into words
+      const words = para.split(' ');
+      words.forEach(word => {
+        const span = document.createElement('span');
+        span.textContent = word;
+        span.style.animationDelay = `${totalDelay}s`;
+        p.appendChild(span);
+        totalDelay += 0.03; // increment delay per word
+      });
+
+      answerEl.appendChild(p);
+      totalDelay += 0.3; // slight pause between paragraphs
+    });
   }
 
   async function askAlfred(question) {
